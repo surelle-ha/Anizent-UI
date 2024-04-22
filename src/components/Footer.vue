@@ -1,24 +1,27 @@
 <template>
-	<div class="container my-5">
-		<footer
-			class="text-center text-lg-start text-white"
-			style="background-color: #1c2331"
-		>
-			<section
-				class="d-flex justify-content-between p-4"
-				style="background-color: #6351ce"
-			>
-				<div class="me-5">
-					<span>You're using Development environment version of Anizent</span>
-				</div>
-			</section>
-			<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-				© 2024 Copyright:
-				<a class="text-white" href=""
-					>Zentinel</a
-				>
-			</div>
-		</footer>
+	<div class="container mx-6">
+
+		<Toolbar :pt="{
+			root: {
+				style: 'background-color: rgb(30,30,30,.5)',
+				class: 'border-none'
+			}
+		}">
+			<template #start>
+				<Button icon="pi pi-whatsapp" label="Contact Developer	" severity="primary"/>
+			</template>
+
+			<template #center>
+				Powered by Zentinel @ 2024
+			</template>
+
+			<template #end> 
+				<Button icon="pi pi-facebook" class="mr-2" severity="secondary" />
+				<Button icon="pi pi-twitter" class="mr-2" severity="secondary" />
+				<Button icon="pi pi-youtube" severity="secondary" />
+			</template>
+		</Toolbar>
+
 	</div>
 </template>
 
