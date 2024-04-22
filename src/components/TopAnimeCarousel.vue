@@ -76,7 +76,7 @@
                     style: 'display: none'
                 },
             }">
-                <span class="p-text-secondary block mb-5">We are processing your request.</span>
+                <span class="p-text-secondary block mb-5">Anizent: Loading Assets</span>
                 <div class="flex align-items-center gap-3 mb-3">
                     <ProgressSpinner style="width: 50px; height: 50px;" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></ProgressSpinner>
                 </div>
@@ -93,7 +93,7 @@
                 }"
             >
                 <div v-if="isLoading">
-                    <span class="p-text-secondary block mb-5">We are processing your request.</span>
+                    <span class="p-text-secondary block mb-5">Anizent: Loading Assets</span>
                     <div class="flex align-items-center gap-3 mb-3">
                         <ProgressSpinner style="width: 50px; height: 50px;" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></ProgressSpinner>
                     </div>

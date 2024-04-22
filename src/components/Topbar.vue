@@ -28,8 +28,74 @@
             </template>
             <template #end>
                 <div class="flex align-items-center gap-2">
-                    <AutoComplete v-model="selectedSeries" class="w-8rem sm:w-auto" placeholder="Search" optionLabel="title" :suggestions="filteredSeries" @complete="search" @keyup.enter="finalSearch"/>
-                    <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                    <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" v-badge.warning="4" v-if="true" class="cursor-pointer" @click="toggleAccount"/>
+
+                    <OverlayPanel ref="op">
+                        <div class="flex flex-column gap-3 w-25rem">
+                            <div>
+                                <span class="font-medium text-900 block mb-2">Search Anime</span>
+                                <InputGroup>
+                                    <AutoComplete v-model="selectedSeries" class="w-8rem sm:w-auto" placeholder="Search" optionLabel="title" :suggestions="filteredSeries" @complete="search" @keyup.enter="finalSearch"/>
+                                    <InputGroupAddon>
+                                        <i class="pi pi-search"></i>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                            <TabView>
+                                <TabPanel header="Login">
+                                    <span class="p-text-secondary block mb-5">Update your information.</span>
+                                    <div class="flex align-items-center gap-3 mb-3">
+                                        <label for="username" class="font-semibold w-6rem">Username</label>
+                                        <InputText id="username" class="flex-auto" autocomplete="off" />
+                                    </div>
+                                    <div class="flex align-items-center gap-3 mb-5">
+                                        <label for="email" class="font-semibold w-6rem">Email</label>
+                                        <InputText id="email" class="flex-auto" autocomplete="off" />
+                                    </div>
+                                    <div class="flex justify-content-end gap-2">
+                                        <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
+                                        <Button type="button" label="Save" @click="visible = false"></Button>
+                                    </div>
+                                </TabPanel>
+                                <TabPanel header="Register">
+                                    <Stepper orientation="vertical">
+                                        <StepperPanel header="Header I">
+                                            <template #content="{ nextCallback }">
+                                                <div class="flex flex-column h-12rem">
+                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content I</div>
+                                                </div>
+                                                <div class="flex py-4">
+                                                    <Button label="Next" @click="nextCallback" />
+                                                </div>
+                                            </template>
+                                        </StepperPanel>
+                                        <StepperPanel header="Header II">
+                                            <template #content="{ prevCallback, nextCallback }">
+                                                <div class="flex flex-column h-12rem">
+                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content II</div>
+                                                </div>
+                                                <div class="flex py-4 gap-2">
+                                                    <Button label="Back" severity="secondary" @click="prevCallback" />
+                                                    <Button label="Next" @click="nextCallback" />
+                                                </div>
+                                            </template>
+                                        </StepperPanel>
+                                        <StepperPanel header="Header III">
+                                            <template #content="{ prevCallback }">
+                                                <div class="flex flex-column h-12rem">
+                                                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content III</div>
+                                                </div>
+                                                <div class="flex py-4">
+                                                    <Button label="Back" severity="secondary" @click="prevCallback" />
+                                                </div>
+                                            </template>
+                                        </StepperPanel>
+                                    </Stepper>
+                                </TabPanel>
+                            </TabView>
+                        </div>
+                    </OverlayPanel>
+
                 </div>
             </template>
         </Menubar>
@@ -37,7 +103,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { onMounted, computed, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
@@ -46,6 +112,7 @@ const router = useRouter();
 const series = ref();
 const selectedSeries = ref();
 const filteredSeries = ref();
+const op = ref();
 
 const search = async (event) => {
     if (selectedSeries.value) {
@@ -97,4 +164,9 @@ const items = computed(() => [
     },
 
 ]);
+
+const toggleAccount = (event) => {
+    op.value.toggle(event);
+}
+
 </script>

@@ -4,7 +4,7 @@
 			<div
 				class="w-full xl:w-6 flex flex-column justify-content-center lg:pr-8 align-items-center xl:align-items-stretch"
 			>
-				<Badge style="width: 400px">🎉 No Ads, No fee & No Clickbait</Badge>
+				<Badge style="width: 350px">🎉 No Ads, No fee & No Clickbait</Badge>
 				<h1 class="text-6xl font-bold text-center xl:text-left">
 					Watch Your Favorite Show @
 					<span class="font-bold text-primary">ANIZENT</span>
@@ -82,6 +82,7 @@
 
 		</div>
 	</div>
+	<SpeedDial v-if="false"/>
 </template>
 
 <script setup>
@@ -89,6 +90,7 @@ import Register from "@/components/Register.vue";
 import TopAnime from "@/components/TopAnimeCarousel.vue";
 import NewEpisode from "@/components/NewEpisodeCarousel.vue";
 import SeriesList from "@/components/SeriesList.vue";
+import SpeedDial from "@/components/SpeedDial.vue";
 </script>
 
 <style></style>
