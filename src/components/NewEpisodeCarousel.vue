@@ -65,7 +65,7 @@
                                                 </div>
                                                 <div class="flex flex-column md:align-items-end gap-5">
                                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                        <Button icon="pi pi-play" label="Watch" outlined></Button>
+                                                        <Button icon="pi pi-play" label="Watch" outlined @click="playMedia(selectedSeriesDetails.episodes[index].id)"></Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -85,13 +85,19 @@
 import { ref, onMounted } from "vue";
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
+import { useRouter } from "vue-router";
 
 const toast = useToast();
+const router = useRouter();
 
 const isLoading = ref(false);
 const recentEpisodes = ref([]);
 const selectedSeriesDetails = ref([]);
 const openSeriesDetails = ref(false);
+
+const playMedia = (id) => {
+    router.push({ name:'watch', query: {episode_id:id} });
+}
 
 const openDetails = (seriesId) => {
     openSeriesDetails.value = !openSeriesDetails.value;

@@ -122,7 +122,7 @@
                                                 </div>
                                                 <div class="flex flex-column md:align-items-end gap-5">
                                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                        <Button icon="pi pi-play" label="Watch" outlined></Button>
+                                                        <Button icon="pi pi-play" label="Watch" outlined @click="playMedia(selectedSeriesDetails.episodes[index].id)"></Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,8 +143,10 @@
 import { ref, onMounted } from "vue";
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
+import { useRouter } from "vue-router";
 
 const toast = useToast();
+const router = useRouter();
 
 const isLoading = ref(false);
 const series_layer_1 = ref([]);
@@ -152,6 +154,10 @@ const series_layer_2 = ref([]);
 const series_layer_3 = ref([]);
 const selectedSeriesDetails = ref([]);
 const openSeriesDetails = ref(false);
+
+const playMedia = (id) => {
+    router.push({ name:'watch', query: {episode_id:id} });
+}
 
 const getRecentEpisode = async () => {
     try {
@@ -174,7 +180,7 @@ const getSeriesDetails = async (id) => {
         isLoading.value = true;
         const response = await axios.get(`${process.env.VUE_APP_MEDIA_API_URL}/anime/gogoanime/info/${id}`);
         selectedSeriesDetails.value = response.data;
-        console.log(response.data)
+        console.log('rds', response.data)
         
         isLoading.value = false;
     } catch (error) {

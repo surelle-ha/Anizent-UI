@@ -2,6 +2,7 @@
 	<div
 		class="bg-bluegray-900 text-gray-100 py-1 px-6 flex justify-content-between lg:justify-content-center align-items-center flex-wrap"
 		style="margin: -8px; font-size: 12px"
+		v-if="false"
 	>
 		<div class="font-bold mr-8">🔥 Development</div>
 		<div class="align-items-center hidden lg:flex">
