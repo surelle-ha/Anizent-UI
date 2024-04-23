@@ -1,9 +1,8 @@
 <template>
     <div class="container px-6 py-0">
-        
         <Panel
             class="mb-4"
-            :pt="{ root: { style: 'border:none;' } }"
+            :pt="{ root: { style: '' } }"
         >
 
             <Toolbar :pt="{
@@ -12,24 +11,21 @@
                 }
             }">
                 <template #start>
-                    <Button icon="pi pi-moon" class="mr-2" severity="secondary" />
-                    <Button icon="pi pi-link" class="mr-2" severity="secondary" />
+                    <Button icon="pi pi-link" class="mr-2" severity="secondary" @click="copyURL"/>
                     <Button icon="pi pi-save" severity="secondary" />
                 </template>
 
                 <template #center>
-                    <IconField iconPosition="left">
-                        <InputIcon>
-                            <i class="pi pi-search" />
-                        </InputIcon>
-                        <!-- Make this server selection -->
-                        <Dropdown v-model="selectedServer" @change="updateVideoSource" :options="servers"
-                            optionLabel="name" optionValue="name" placeholder="Select a quality"
-                            class="w-full md:w-14rem" />
-                    </IconField>
+
                 </template>
 
                 <template #end>
+                    <Dropdown v-model="selectedEpisode" @change="changeEpisode" :options="EpisodesList.episodes"
+                            :optionLabel="episode => formatLabel(episode.id)" optionValue="id" placeholder="Select a quality"
+                            class="w-full md:w-20rem mr-4" />
+                    <Dropdown v-model="selectedServer" @change="updateVideoSource" :options="servers"
+                            optionLabel="name" optionValue="name" placeholder="Select a quality"
+                            class="w-full md:w-14rem mr-4" />
                     <Dropdown v-model="selectedQuality" @change="updateVideoSource" :options="videoSources"
                         optionLabel="quality" optionValue="url" placeholder="Select a quality"
                         class="w-full md:w-14rem" />
@@ -38,7 +34,7 @@
 
             <div class="card text-right mx-6">
                 <div class="flex flex-wrap justify-content-center">
-                    <div class="w-full xl:w-8 flex flex-column justify-content-center lg:pr-0 align-items-center xl:align-items-stretch">
+                    <div class="w-full xl:w-6 flex flex-column justify-content-center lg:pr-0 align-items-center xl:align-items-stretch">
                         <video ref="videoElement" controls></video>
                     </div>
                 </div>
@@ -73,15 +69,21 @@ import { watch, computed, ref, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import Hls from 'hls.js';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
+const show_query = computed(() => route.query.show);
+const url_query = computed(() => route.query.episode_id);
 
 const toast = useToast();
 const route = useRoute();
+const router = useRouter();
 const videoElement = ref(null);
 const isLoading = ref(false);
 const selectedSeriesDetails = ref([]);
 const selectedQuality = ref('');
 const selectedServer = ref('vidstreaming');
+const EpisodesList = ref([]);
+const selectedEpisode = ref(url_query.value)
 const servers = ref([
     {
         name: 'gogocdn'
@@ -94,8 +96,9 @@ const servers = ref([
     }
 ]);
 
+const formatLabel = (label) => label.replace(/-/g, ' ');
+
 const videoSources = computed(() => selectedSeriesDetails.value.sources || []);
-const url_query = computed(() => route.query.episode_id);
 
 watch([selectedServer, selectedQuality], (newValues, oldValues) => {
     const [newServer, newQuality] = newValues;
@@ -112,9 +115,45 @@ watch([selectedServer, selectedQuality], (newValues, oldValues) => {
 
 onMounted(() => {
     if (url_query.value) {
+        getSeriesEpisodes(show_query.value)
         getSeriesDetails(url_query.value, selectedServer.value);
     }
 });
+
+const changeEpisode = () => {
+    router.push({name: 'watch', query: {show: show_query.value,episode_id:selectedEpisode.value}})
+    getSeriesDetails(selectedEpisode.value, selectedServer.value);
+}
+
+const copyURL = async () => {
+    try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.add({
+            severity: 'info',
+            summary: 'Share URL Copied',
+            life: 3000,
+        });
+    } catch($e) {
+        toast.add({
+            severity: 'error',
+            summary: 'Cant copy share URL',
+            life: 3000,
+        });
+    }
+}
+
+const getSeriesEpisodes = async (id) => {
+    try {
+        isLoading.value = true;
+        const response = await axios.get(`${process.env.VUE_APP_MEDIA_API_URL}/anime/gogoanime/info/${id}`);
+        EpisodesList.value = response.data;
+        
+        isLoading.value = false;
+    } catch (error) {
+        isLoading.value = false;
+        toast.add({ severity: 'error', summary: 'Something went wrong!', detail: `Something went wrong! ${error.message}. Please contact the developer.`, life: 3000 });
+    }
+}
 
 async function getSeriesDetails(id, server) {
     try {

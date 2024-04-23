@@ -13,12 +13,11 @@
                         <div class="mb-3">
                             <div class="relative mx-auto">
                                 <img height="370px" :src="slotProps.data.image" :alt="slotProps.data.title" class="w-full border-round" />
-                                <Tag value="NEW" :severity="getSeverity('NEW')" class="absolute" style="left:5px; top: 5px"/>
                             </div>
                         </div>
-                        <div class="mb-3 font-medium title">{{ slotProps.data.title }}</div>
+                        <div class="mb-3 font-medium title">{{ slotProps.data.releaseDate }}</div>
                         <div class="flex justify-content-between align-items-center">
-                            <div class="mt-0 font-semibold text-xl">Episode {{ slotProps.data.episodeNumber }}</div>
+                            <div class="mt-0 font-semibold text-xl">{{ slotProps.data.title }}</div>
                             <span>
                                 <Button icon="pi pi-heart" severity="secondary" outlined/>
                             </span>
@@ -84,7 +83,7 @@
                                                 </div>
                                                 <div class="flex flex-column md:align-items-end gap-5">
                                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                        <Button icon="pi pi-play" label="Watch" outlined></Button>
+                                                        <Button icon="pi pi-play" label="Watch" outlined @click="playMedia(selectedSeriesDetails.episodes[index].id, selectedSeriesDetails.id)"></Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -105,9 +104,10 @@
 import { ref, onMounted, watch, computed } from "vue";
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 const toast = useToast();
 const isLoading = ref(false);
 const series_layer_1 = ref([]);
@@ -115,6 +115,10 @@ const selectedSeriesDetails = ref({});
 const openSeriesDetails = ref(false);
 
 const url_query = computed(() => route.query.query);
+
+const playMedia = (episode, show) => {
+    router.push({ name:'watch', query: {show: show,episode_id:episode} });
+}
 
 watch(url_query, (newQuery) => {
     if (newQuery && newQuery !== '') {

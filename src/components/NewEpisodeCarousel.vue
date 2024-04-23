@@ -65,7 +65,7 @@
                                                 </div>
                                                 <div class="flex flex-column md:align-items-end gap-5">
                                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                        <Button icon="pi pi-play" label="Watch" outlined @click="playMedia(selectedSeriesDetails.episodes[index].id)"></Button>
+                                                        <Button icon="pi pi-play" label="Watch" outlined @click="playMedia(selectedSeriesDetails.episodes[index].id, selectedSeriesDetails.id)"></Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,8 +95,8 @@ const recentEpisodes = ref([]);
 const selectedSeriesDetails = ref([]);
 const openSeriesDetails = ref(false);
 
-const playMedia = (id) => {
-    router.push({ name:'watch', query: {episode_id:id} });
+const playMedia = (episode, show) => {
+    router.push({ name:'watch', query: {show: show,episode_id:episode} });
 }
 
 const openDetails = (seriesId) => {
